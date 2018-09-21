@@ -6,6 +6,9 @@ import router from './router'
 
 Vue.config.productionTip = false
 
+
+//Vue.use(vue-im)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#misim-app',

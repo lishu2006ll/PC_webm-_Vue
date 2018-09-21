@@ -140,7 +140,8 @@ import Vue from 'vue';
 import axios from 'axios';
 import qs from 'qs';
 import jsonp from 'jsonp';
-import baseData from '../util/util';
+import baseData  from '../util/util';
+
 export default {
   props: ['session'],
   mounted() {
@@ -162,7 +163,7 @@ export default {
       $('.misim-box-btn').on('click', function() {
         /**
          * [token 获取用户token]
-         * @copyright 获取主站信息后 初始化用户token 
+         * @copyright 获取主站信息后 初始化用户token
          */
 
         //if (!sessionStorage.getItem('userId') || sessionStorage.getItem('userId') === 'undefined') {
@@ -171,59 +172,75 @@ export default {
 
         // } else {
 
-
-          let AppSecret = 'vWY28KQflfmRL';
+          //AppSecret 参数字符串的头部仅作加密使用, 为了保证数据安全请不要在请求参数中使用
+          let AppSecret = 'wwM2IJHQCeAegwGqRtanzyyWyxK6XeEP';     //公钥
           let Nonce = Math.random();
           let Timestamp = new Date().getTime();
           let Signature1 = AppSecret + Nonce + Timestamp;
-          let Signature = hex_sha1(Signature1);
+          //let Signature = hex_sha1(Signature1);                 //进行签名
+          let sign = md5(Signature1);                             //进行签名
           let SessionId = Math.random().toString(36).substr(2);
 
-          localStorage.setItem('AppSecret', 'vWY28KQflfmRL');
-          localStorage.setItem('AppKey', 'mgb7ka1nmf1mg');
-          localStorage.setItem('Nonce', Nonce);
-          localStorage.setItem('Timestamp', Timestamp);
-          localStorage.setItem('Signature', Signature);
-          localStorage.setItem('SessionId', SessionId);
+          //localStorage.setItem('AppSecret', 'secret');
+          //localStorage.setItem('AppKey', 'client');
+          //localStorage.setItem('Nonce', Nonce);
+          //localStorage.setItem('Timestamp', Timestamp);
+          //localStorage.setItem('Signature', Signature);
+          //localStorage.setItem('SessionId', SessionId);
 
-          let turl = '' + _this.urlAddress + '/csr/users/token';
+          //获取token指令
+          let turl = '' + _this.urlAddress + '/auth/token';
 
 
-
-          axios.defaults.headers.common['AppKey'] = 'mgb7ka1nmf1mg';
-          axios.defaults.headers.common['Nonce'] = Nonce;
-          axios.defaults.headers.common['Timestamp'] = Timestamp;
-          axios.defaults.headers.common['Signature'] = Signature;
-
-          axios.defaults.headers.common['UserId'] = sessionStorage.getItem('userId');
+          //axios.defaults.headers.common['userName'] = '';
+          //axios.defaults.headers.common['clientId'] = '6db8151e722e4261a4a7a5843d023e5a';
+          //axios.defaults.headers.common['clientSecret'] = '';
+          //axios.defaults.headers.common['Nonce'] = Nonce;           //随机数
+          //axios.defaults.headers.common['Timestamp'] = Timestamp;   //时间戳
+          //axios.defaults.headers.common['sign'] = sign;             //签名
           axios.defaults.headers.common['ClientType'] = 'pc';
           axios.defaults.headers.common['SessionId'] = SessionId;
-          axios.get(turl)
+          //axios.defaults.headers.common['UserId'] = sessionStorage.getItem('userId');
+          var inputDatas = {
+            clientId: '6db8151e722e4261a4a7a5843d023e5a',
+            userName:'admin',
+　　         sign:sign,       //签名
+            timestamp: Timestamp, //有效时间
+            nonce: Nonce          //随机数
+          }
+          //传入参数排序
+          var sortInputDatas = jsonSort2(inputDatas);
+          axios.get(turl,{
+            params: sortInputDatas
+          })
+          //axios.get(turl)
             .then(responset => {
+              console.log(responset);
+              console.log(responset.data.randomKey);
+              let randomkey = responset.data.randomKey;
+              let token = responset.data.token
 
               /*签名 加密*/
-              localStorage.setItem('im_token', responset.data.data);
-              localStorage.setItem('isCustomer', false);
-              let AppSecret = localStorage.getItem('AppSecret');
+              localStorage.setItem('lis_token', token);
+              localStorage.setItem('isCustomer', false);                //是否是人工
+              let AppSecret = randomkey;
               let Nonce = Math.random();
               let Timestamp = new Date().getTime();
               let Signature1 = AppSecret + Nonce + Timestamp;
-              let Signature = hex_sha1(Signature1);
-              axios.defaults.headers.common['AppKey'] = 'mgb7ka1nmf1mg';
+              let sign = md5(Signature1);
+              //axios.defaults.headers.common['lis_token'] = 'client';
               axios.defaults.headers.common['Nonce'] = Nonce;
               axios.defaults.headers.common['Timestamp'] = Timestamp;
-              axios.defaults.headers.common['Signature'] = Signature;
-
-              axios.defaults.headers.common['UserId'] = sessionStorage.getItem('userId');
+              axios.defaults.headers.common['sign'] = sign;
               axios.defaults.headers.common['ClientType'] = 'pc';
               axios.defaults.headers.common['SessionId'] = SessionId;
-              axios.defaults.headers.common['ReqToken'] = responset.data.data;
-
+              axios.defaults.headers.common['lis_token'] = token;
+              axios.defaults.headers.common['UserId'] = sessionStorage.getItem('userId');
               /**
                * [session 初始化会话列表]
                * @copyright 获取用户token后 初始化 会话列表
                */
-              axios.get('' + _this.urlAddress + '/csr/customers/action/findAnswerByQuestion', {
+              axios.get('' + _this.urlAddress + '/csr/customers/findAnswerByQuestion', {
                   params: {
                     question: 'hello',
                     bizLine: 'huangye',
@@ -299,11 +316,6 @@ export default {
           $('.misim-chat-upload').hide();
           $('.misim-chat-expression').find('.misim-top-right').show()
         // }
-
-
-
-
-
       })
 
     })
@@ -510,13 +522,8 @@ export default {
             console.log(error);
           });
       }
-
-
     },
-
-
   }
-
 };
 
 </script>

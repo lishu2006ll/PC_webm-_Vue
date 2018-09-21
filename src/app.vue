@@ -11,11 +11,12 @@ export default {
 }
 </script>
 
+
 <style>
 body {
         /*background:#000;*/
         :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-          color: #999; opacity:1; 
+          color: #999; opacity:1;
         }
 
         ::-moz-placeholder { /* Mozilla Firefox 19+ */
@@ -34,7 +35,7 @@ body {
         -khtml-user-select: none; /* Konqueror */
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
-        user-select: none; 
+        user-select: none;
 
 }
 #misim-app {
@@ -45,4 +46,5 @@ body {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 </style>

@@ -309,8 +309,8 @@ ul {
     }
   }
 }
-
 </style>
+
 <script>
 $(function() {
   /**
@@ -318,7 +318,7 @@ $(function() {
    */
   if (navigator.appName == "Microsoft Internet Explorer" && parseInt(navigator.appVersion.split(";")[1].replace(/[ ]/g, "").replace("MSIE", "")) < 10) {
 
-    alert("您的浏览器过旧不能使用聊天功能，请升级浏览器版本或者更换浏览器");
+    alert("您的浏览器过旧不能使用聊天功能，请升级浏览器版本或者更换浏览器 IE>10");
     return false;
   }
 
@@ -375,7 +375,6 @@ $(function() {
       if (typeof jcrop_api != 'undefined') {
         jcrop_api.enable()
       } else {
-
         let el = $('.misim-chat-message')[0];
         el.scrollTop = el.scrollHeight - el.clientHeight;
         $('.misim-app-wrap').Jcrop({
@@ -497,7 +496,7 @@ export default {
     this.$nextTick(() => {
       let _this = this;
       function loadJS(src, callback){
-          var path = 'http://j1.58cdn.com.cn/walle/static';
+          var path = '../../static';
           $('<script>').attr('src', ''+path+'/bootstrap.min.js').appendTo($('head'));
           $('<script>').attr('src', ''+path+'/html2canvas.js').appendTo($('head'));
           $('<script>').attr('src', ''+path+'/modal.js?').appendTo($('head'));
@@ -505,14 +504,16 @@ export default {
           // $('<script>').attr('src', ''+path+'/sha1.js').appendTo($('head'));
           // $('<script>').attr('src', ''+path+'/base64.js').appendTo($('head'));
           $('<script>').attr('src', ''+path+'/jQuery.XDomainRequest.js').appendTo($('head'));
+          $('<script>').attr('src', ''+path+'/md5.min.js').appendTo($('head'));
+          $('<script>').attr('src', ''+path+'/method.js').appendTo($('head'));
           // $('<script>').attr('src', ''+path+'/sdk.js').appendTo($('head'));
           for(var i = 0;i<src.length;i++){
               var script = document.createElement('script');
               var head = document.getElementsByTagName('head')[0];
               script.src = src[i];
               head.appendChild(script);
-          } 
-          
+          }
+
           　if(script.readyState){   //IE
     　　　　　　script.onreadystatechange=function(){
     　　　　　　　　if(script.readyState=='complete'||script.readyState=='loaded'){
@@ -524,7 +525,8 @@ export default {
     　　　　　　script.onload=function(){callback();}
     　　　　}
     }
-    loadJS(['http://j1.58cdn.com.cn/walle/static/sha1.js','http://j1.58cdn.com.cn/walle/static/sdk.js','http://j1.58cdn.com.cn/walle/static/base64.js'], function(){
+    //loadJS(['http://j1.58cdn.com.cn/walle/static/sha1.js','http://j1.58cdn.com.cn/walle/static/sdk.js','http://j1.58cdn.com.cn/walle/static/base64.js'], function(){
+    loadJS(['../../static/sha1.js','../../static/sdk.js','../../static/base64.js'], function(){
       /**反转***/
       function IsReverse(text) {
         return text.split('').reverse().join('');
@@ -549,15 +551,14 @@ export default {
        * @param  {object} [key] jsonp加密url
        * @param  {object} [item] 列表对象
        */
-      var AppSecret = 'vWY28KQflfmRL';
+      var AppSecret = 'secret_lis';
       var Nonce = Math.random();
       var Timestamp = new Date().getTime();
       var Signature1 = AppSecret + Nonce + Timestamp;
       var Signature = hex_sha1(Signature1);
-      var url = '/swap/im?callback=success_jsonpCallback&appId=10130-sjkf@jAO9wKr3Yj&source=13&clientType=pcweb_shjkf';
+      var originUrl = '/swap/im?callback=success_jsonpCallback&appId=app_lis&source=13&clientType=pcweb_shjkf';
       var base = new Base64();
-      var result = base.encode(url);
-
+      var result = base.encode(originUrl);
       var len = (result.split('=')).length - 1;
       if ((result.charAt(result.length - 1) == "=") == true) {
         result = result.substr(0, result.length - len);
@@ -566,7 +567,6 @@ export default {
         result = result + '0';
       }
       var $data = IsReverse(result);
-
       $.ajax({
         type: 'get',
         dataType: 'jsonp',
@@ -575,7 +575,7 @@ export default {
         cache: 'true',
         data: {
           //appId: '100238-wb@jJkmqGqSPg2',
-          appId:'10130-sjkf@jAO9wKr3Yj',
+          appId:'app_lis',
           source: '13',
           clientType: 'pcweb_shjkf',
           key: $data
@@ -583,16 +583,16 @@ export default {
         },
         beforeSend: function(xhr) {
 
-          xhr.setRequestHeader('PPU', getCookie("PPU"));
+          xhr.setRequestHeader('LIS', getCookie("LIS"));
 
 
         },
-        url: 'http://ppuswapapi.58.com/swap/im',
+        url: 'http://localhost:8081/swap/im',
         success: function(data) {
           // console.log(data);
           /**
            * [获取主站信息后 初始化sdk通信]
-           * @copyright 获取主站cookie成功后 初始化 
+           * @copyright 获取主站cookie成功后 初始化
            */
            let initUser = {};
            var pronum = Math.floor(Math.random()*100000000000000);  //随机生成
@@ -607,15 +607,14 @@ export default {
                   source: '13',
                   client_version: '1.0',
                   im_token: data.token,
-                  appid: '10130-sjkf@jAO9wKr3Yj',
+                  appid: 'app_lis',
                   client_type: 'pcweb_shjkf', // 设备信息上报(需要引入拓展功能中的信质设备信息上报的js代码)
-                  //  getNewToken:function(cb){                               // im-token非法需要重新换取 
+                  //  getNewToken:function(cb){                               // im-token非法需要重新换取
                   //     cb()
                   // }
 
                 };
                 console.log(sessionStorage.getItem('userId'))
-                
 
           }else{
                  sessionStorage.setItem('userId', testran);
@@ -625,16 +624,16 @@ export default {
                   device: testran,
                   client_version: '1.0',
                   im_token:'',
-                  appid: '10130-sjkf@jAO9wKr3Yj',
+                  appid: 'app_lis',
                   client_type: 'pcweb_shjkf', // 设备信息上报(需要引入拓展功能中的信质设备信息上报的js代码)
-                  //  getNewToken:function(cb){                               // im-token非法需要重新换取 
+                  //  getNewToken:function(cb){                               // im-token非法需要重新换取
                   //     cb()
                   // }
 
                 };
-                 
+
           }
-          
+
         // let client_type = 'pcweb_shjkf',
         //     appid = '10130-sjkf@jAO9wKr3Yj',
         //     version = '1.0',
@@ -643,7 +642,7 @@ export default {
           let options = $.extend({}, initUser);
 
           options.comet = 'http://integrateimget.58.com:443/v3/recvmsg';
-          options.api = 'http://integrateim.58.com';
+          options.api = 'http://localhost:8081';
 
           // options.comet = 'https://imgets.58.com/v3/recvmsg';
           // options.api = 'https://im.58.com';
@@ -659,7 +658,7 @@ export default {
           }
           /**
            * [login 通信登录]
-           * @copyright sdk登录成功 
+           * @copyright sdk登录成功
            */
           webimbiz.addEventListener('login', function() {
              console.log('登录成功');
@@ -668,7 +667,7 @@ export default {
 
           /**
            * [logout 通信退出]
-           * @copyright 退出成功 
+           * @copyright 退出成功
            */
           webimbiz.addEventListener('logout', function() {
 
@@ -720,7 +719,7 @@ export default {
 
           /**
            * [connectchange 连接发生变化]
-           * @copyright 建立长连接 
+           * @copyright 建立长连接
            */
           webimbiz.addEventListener('connectchange', function(connected, reason) {
             // console.log(connected)
@@ -734,7 +733,7 @@ export default {
 
             }
           });
-          
+
 
         }
 

@@ -1,7 +1,9 @@
 /**基础数据 url*/
 export default {
 
-	  urlBase: 'http://customer.mism.58.com',    //数据入口
+      //urlBase: 'http://customer.mism.58.com',    //数据入口
+
+      urlBase: 'http://localhost:8081' ,
 
 	  faceBase:[                                 //输入基础表情数据
         { value: 'im-emotion-unit im-emotion-0', name: '[微笑]' },
@@ -167,4 +169,6 @@ export default {
 
          ]
 
-} 
+}
+
+
