@@ -11,7 +11,6 @@ export default {
 }
 </script>
 
-
 <style>
 body {
         /*background:#000;*/
@@ -36,8 +35,8 @@ body {
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
         user-select: none;
-
 }
+
 #misim-app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

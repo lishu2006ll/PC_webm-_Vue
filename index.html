@@ -4,26 +4,102 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta charset="utf-8">
-  <title>web_im</title>
+  <title>web-im</title>
   <link rel="stylesheet" type="text/css" href="./static/app.css">
   <script type="text/javascript" src="./static/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+  <script src="//cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 
 <body>
+  <script>
+      var headers = {
+          // additional header
+          'token': 'my-client-id'
+      };
+
+      function connect() {
+          var socket = new SockJS('http://localhost:8081/app/webServer');
+          //var userid = document.getElementById('userId').value;
+          var userid = "lis";
+          stompClient = Stomp.over(socket);
+          stompClient.connect(headers,
+          function connectCallback(params) {
+            setConnected(true);
+            // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+            //document.getElementById("state-info").innerHTML = "连接成功";
+            console.log('已连接【' + frame + '】');
+            stompClient.subscribe('/topic/greetings', function (greeting) {
+              showGreeting(JSON.parse(greeting.body).content);
+            })
+          } ,
+          function errorCallback(error){
+            // 连接失败时（服务器响应 ERROR 帧）的回调方法
+            //document.getElementById("state-info").innerHTML = "连接失败";
+            console.log('连接失败【' + error + '】');
+          });
+
+
+          /*
+          stompClient.connect('', '', function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/greetings', function (greeting) {
+              showGreeting(JSON.parse(greeting.body).content);
+              //console.log('message ==  ' + message.body);
+            });
+            stompClient.subscribe('/user/' + userid + '/message', function (greeting) {
+              console.log(JSON.parse(greeting.body).content);
+              showGreeting(JSON.parse(greeting.body).content);
+            });
+          });
+          */
+      }
+
+      function disconnect() {
+        if (stompClient != null) {
+          stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Disconnected");
+      }
+
+/*
+      sock.onopen = function () {
+        console.log('open');
+        sock.send('test');
+      };
+
+      sock.onmessage = function (e) {
+        console.log('message', e.data);
+        sock.close();
+      };
+
+      sock.onclose = function () {
+        console.log('close');
+      };
+      */
+    </script>
+
+
   <div class="misim-app-wrap">
     <div id="misim-app" class="app"></div>
     <div class="misim-box-btn"></div>
     <div class="misim-bigModel"></div>
     <div class="misim-dialog" style="display: none;"></div>
     <div class="shade-md"></div>
-    <div class="shode-layer layer"></div> 
+    <div class="shode-layer layer"></div>
     <div class="misim-dialog-main" style="display: none;">
-        <p>随时欢迎您再次向我咨询，感谢您对58同城的支持</p>
+        <p>随时欢迎您再次向我咨询，感谢您的支持</p>
         <div>
            <button class="misim-dialog-false">取消</button>
            <button class="misim-dialog-true">确定</button>
         </div>
     </div>
+  </div>
+  <div>
+    <button id="connect" onclick="connect()">连接</button>
   </div>
 </body>
 

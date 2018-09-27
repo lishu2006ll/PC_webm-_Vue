@@ -3,11 +3,10 @@
 import Vue from 'vue'
 import App from './app.vue'
 import router from './router'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 
 Vue.config.productionTip = false
-
-
-//Vue.use(vue-im)
 
 /* eslint-disable no-new */
 new Vue({
@@ -16,3 +15,4 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+

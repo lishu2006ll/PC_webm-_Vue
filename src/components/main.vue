@@ -12,6 +12,7 @@
     </div>
     <button id="sub-shot" type="hidden" @click="subShot"></button>
   </div>
+
 </template>
 <style lang="less" scoped>
 *,
@@ -582,10 +583,7 @@ export default {
 
         },
         beforeSend: function(xhr) {
-
           xhr.setRequestHeader('LIS', getCookie("LIS"));
-
-
         },
         url: 'http://localhost:8081/swap/im',
         success: function(data) {
@@ -643,16 +641,11 @@ export default {
 
           options.comet = 'http://integrateimget.58.com:443/v3/recvmsg';
           options.api = 'http://localhost:8081';
-
-          // options.comet = 'https://imgets.58.com/v3/recvmsg';
-          // options.api = 'https://im.58.com';
           options.uploadimg = 'http://upload.58cdn.com.cn/json';
            console.log(options);
           let webimbiz = new WebIMSDK(options);
           window.webimbiz = webimbiz;
           webimbiz.start();
-
-
           jQuery.imSdk = {
             webimbiz: webimbiz
           }

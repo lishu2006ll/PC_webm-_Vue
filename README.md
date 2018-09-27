@@ -40,3 +40,7 @@ Response.Write(callback + "{ \"success\": [{ \"id\": 1, \"title\": \"title 1\" }
 
 
 替换现在的im通讯组建，采用https://github.com/mt51/vue-im/tree/master/config   vue-im开源方案进行
+
+
+!. 主系统生成的token， 由当前系统获得，然后获得主系统的用户id， 根据用户的id进行权限验证，和后台进行数据交互
+   用户的权限来自后台， 获得user_id，=====》获得client_id, 获得client_id， 可以获得用户的权限等数据结构，根据这些数据结构，用户可以在前台进行交互操作。
